@@ -21,6 +21,7 @@ if [[ -f "/key/$REPO_KEY" ]] ; then
 	echo "current user: "
 	id -un
 	ls -lah /key
+	ls -lah /root
 	ls -lah /root/.ssh/
 	cp /key/$REPO_KEY /root/.ssh/id_rsa
 	chmod 600 /root/.ssh/id_rsa
