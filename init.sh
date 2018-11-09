@@ -18,14 +18,8 @@ echo "branch     : $REPO_BRANCH"
 # check if credentials files exist
 if [[ -f "/key/$REPO_KEY" ]] ; then 
 	echo "key file   : $REPO_KEY"
-	echo "current user: "
-	id -un
-	ls -lah /key
-	ls -lah /root
-	ls -lah /root/.ssh/
 	cp /key/$REPO_KEY /root/.ssh/id_rsa
 	chmod 600 /root/.ssh/id_rsa
-	ls -lah /root/.ssh/
 	ssh-keyscan -H gitlab.com >> /root/.ssh/known_hosts
 fi
 
