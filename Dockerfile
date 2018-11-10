@@ -20,4 +20,6 @@ RUN chgrp -R 0 /root && \
 # Clean up
 RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+USER $USER
+
 CMD ["/init.sh"]
