@@ -18,9 +18,11 @@ It is also required to mount a volume where the repository will be cloned from l
 In case of private repositories you also have to mount deployment SSH key authorized to clone code repository
 
 ### optional
-`TAG` - clone specified tag
+`REPO_TAG` - checkout specified tag
 
-`BRANCH` - clone specified branch (defaults to master)
+`REPO_REVISION` - checkout specified revision
+
+`REPO_BRANCH` - clone specified branch (defaults to master)
 
 `REPO_KEY` - RSA key filename (defaults to id_rsa)
 

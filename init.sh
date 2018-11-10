@@ -15,6 +15,8 @@ fi
 
 echo "repository : $REPO_LINK"
 echo "branch     : $REPO_BRANCH"
+echo "tag        : $REPO_TAG"
+echo "revision   : $REPO_REVISION"
 # check if credentials files exist
 if [[ -f "/key/$REPO_KEY" ]] ; then 
 	echo "key file   : $REPO_KEY"
@@ -27,12 +29,14 @@ if [ ! -z "$REPO_USER" ] && [ ! -z "$REPO_PASS" ]; then
 	# clone with repository username & password
 	echo "credentials: username and password"
 	git clone -b $REPO_BRANCH https://$REPO_USER:$REPO_PASS@$REPO_LINK /repository
-elif [[ ! -f "/root/.ssh/id_rsa" ]] ; then 
-	echo -e "\033[1;91mERROR:\033[0m REPO_USER, REPO_PASS env variables or SSH deployment key missing"
-	exit 1
 else
-	# clone public repository or using ssh deployment key
-	echo "credentials: RSA key"
+    if [[ ! -f "/root/.ssh/id_rsa" ]] ; then
+	    echo -e "\033[1;93mWARNING:\033[0m REPO_USER, REPO_PASS env variables or SSH deployment key missing"
+	else
+	    # clone public repository or using ssh deployment key
+	    echo "credentials: RSA key"
+	fi
+	ls -lah /repository
 	git clone -b $REPO_BRANCH $REPO_LINK /repository
 fi
 
@@ -42,3 +46,8 @@ if [ ! -z "$REPO_TAG" ]; then
 	git checkout tags/$REPO_TAG
 fi
 
+if [ ! -z "$REPO_REVISION" ]; then
+	cd /repository && \
+	echo "checking out repository revision: $REPO_REVISION"
+	git checkout $REPO_REVISION
+fi
