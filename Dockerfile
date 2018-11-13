@@ -1,10 +1,11 @@
 FROM alpine:3.6
 
-COPY init.sh /
 RUN apk add --update git openssh
 
 RUN addgroup -g 1000 -S git && \
     adduser -u 1000 -S git -G git
+
+ADD [--chown=git] init.sh /
 
 RUN mkdir /home/git/.ssh/  && \
     chown git /home/git/.ssh && \
