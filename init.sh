@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ -z "$REPO_LINK" ]; then 
 	echo -e "\033[1;91mERROR:\033[0m REPO_LINK env variable is required"
@@ -17,12 +17,13 @@ echo "repository : $REPO_LINK"
 echo "branch     : $REPO_BRANCH"
 echo "tag        : $REPO_TAG"
 echo "revision   : $REPO_REVISION"
+
 # check if credentials files exist
 if [[ -f "/key/$REPO_KEY" ]] ; then 
 	echo "key file   : $REPO_KEY"
-	cp /key/$REPO_KEY /root/.ssh/id_rsa
-	chmod 600 /root/.ssh/id_rsa
-	ssh-keyscan -H gitlab.com >> /root/.ssh/known_hosts
+	cp /key/$REPO_KEY /home/git/.ssh/id_rsa
+	chmod 600 /home/git/.ssh/id_rsa
+	ssh-keyscan -H gitlab.com >> /home/git/.ssh/known_hosts
 fi
 
 if [ ! -z "$REPO_USER" ] && [ ! -z "$REPO_PASS" ]; then 
@@ -30,13 +31,12 @@ if [ ! -z "$REPO_USER" ] && [ ! -z "$REPO_PASS" ]; then
 	echo "credentials: username and password"
 	git clone -b $REPO_BRANCH https://$REPO_USER:$REPO_PASS@$REPO_LINK /repository
 else
-    if [[ ! -f "/root/.ssh/id_rsa" ]] ; then
+    if [[ ! -f "/home/git/.ssh/id_rsa" ]] ; then
 	    echo -e "\033[1;93mWARNING:\033[0m REPO_USER, REPO_PASS env variables or SSH deployment key missing"
 	else
 	    # clone public repository or using ssh deployment key
 	    echo "credentials: RSA key"
 	fi
-	ls -lah /repository
 	git clone -b $REPO_BRANCH $REPO_LINK /repository
 fi
 

@@ -1,25 +1,20 @@
-FROM debian:stretch
+FROM alpine:3.6
 
-RUN apt-get update && apt-get install -y git
+COPY init.sh /
+RUN apk add --update git openssh
 
-ARG USER=1001
+RUN addgroup -g 1000 -S git && \
+    adduser -u 1000 -S git -G git
 
-ADD [--chown=$USER:root] init.sh /
-RUN chmod +x /init.sh
-
-USER root
-
-RUN mkdir /root/.ssh/ && \
+RUN mkdir /home/git/.ssh/  && \
+    chown git /home/git/.ssh && \
 	mkdir /repository && \
-	touch /root/.ssh/known_hosts && \
-	echo "\nStrictHostKeyChecking no" >> /etc/ssh/ssh_config
+	chown git /repository && \
+	touch /home/git/.ssh/known_hosts && \
+	echo "" >> /etc/ssh/ssh_config && \
+	echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config &&\
+	chown git /etc/ssh/ssh_config
 
-RUN chgrp -R 0 /root && \
-    chmod -R g=u /root
-
-# Clean up
-RUN apt-get autoremove -y && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-USER $USER
+USER git
 
 CMD ["/init.sh"]
